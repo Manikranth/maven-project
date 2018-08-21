@@ -8,6 +8,7 @@ pipeline {
             post {
                 success {
                     echo 'Now Archiving...'
+                    echo 'done'
                     
                 }
             }
