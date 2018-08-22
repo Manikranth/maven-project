@@ -12,5 +12,10 @@ pipeline {
                 }
             }
         }
+        satge('deploy to staging'){
+            steps{
+                build job:'Build to staging'
+            }
+        }
     }
 }
