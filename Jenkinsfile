@@ -1,42 +1,12 @@
-pipeline {
-    agent any
-    stages{
-        stage('Build'){
-            steps {
-                bat 'mvn clean package'
-            }
-            post {
-                success {
-                    echo 'Now Archiving...'
-                    archiveArtifacts artifacts: '**/target/*.war'
+pipeline{
+    agent any{
+        stages{
+            stage('Build'){
+                step{
+                    bat 'mvn clean package'
+                    bat 'docker build . -t toncatwebapp:${env.BUILD_ID}'
                 }
             }
         }
-        stage ('Deploy to Staging'){
-            steps {
-                build job: 'Build to staging'
-            }
-        }
-
-        stage ('Deploy to Production'){
-            steps{
-                timeout(time:5, unit:'DAYS'){
-                    input message:'Approve PRODUCTION Deployment?'
-                }
-
-                build job: 'Beploy to prod'
-            }
-            post {
-                success {
-                    echo 'Code deployed to Production.'
-                }
-
-                failure {
-                    echo ' Deployment failed.'
-                }
-            }
-        }
-
-
     }
 }
